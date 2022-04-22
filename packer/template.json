@@ -1,0 +1,39 @@
+{
+  "builders": [
+    {
+      "disable_default_service_account": "true",
+      "image_family": "packer-{{user `my_name`}}-{{user `build_name`}}-{{user `distro_name`}}",
+      "image_name": "packer-{{user `my_name`}}-{{user `build_name`}}-{{user `distro_name`}}-{{user `build_timestamp`}}",
+      "labels": {
+        "build_timestamp": "{{user `build_timestamp`}}"
+      },
+      "machine_type": "{{user `machine_type`}}",
+      "name": "{{user `build_name`}}",
+      "project_id": "tkpd-stag-cloud-workshop-27c9",
+      "source_image_family": "{{user `source_image_family`}}",
+      "ssh_username": "root",
+      "network": "vpc-workshop-default",
+      "subnetwork": "subnet-a",
+      "type": "googlecompute",
+      "zone": "{{user `zone`}}",
+      "account_file": "/etc/service-account.json"
+    }
+  ],
+  "post-processors": [],
+  "provisioners": [
+    {
+      "script": "script/provisioner.sh",
+      "type": "shell"
+    }
+  ],
+  "variables": {
+    "build_name": "{{timestamp}}",
+    "build_timestamp": "{{timestamp}}",
+    "source_image_family": "{{user `distro_name`}}-lts",
+    "distro_name": "ubuntu-2004",
+    "machine_type": "n1-standard-1",
+
+    "my_name": "<REPLACE_ME>",
+    "zone": "<REPLACE_ME>"
+  }
+}

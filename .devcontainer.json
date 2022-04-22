@@ -1,0 +1,7 @@
+{
+  "extensions": [
+    "hashicorp.terraform"
+  ],
+  "forwardPorts": [],
+  "image": "gcr.io/tkpd-stag-cloud-workshop-27c9/workspace:devcontainer"
+}

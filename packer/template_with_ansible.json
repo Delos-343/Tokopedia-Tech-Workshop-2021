@@ -1,0 +1,53 @@
+{
+  "builders": [
+    {
+      "disable_default_service_account": "true",
+      "image_family": "packer-{{user `my_name`}}-{{user `build_name`}}-{{user `distro_name`}}",
+      "image_name": "packer-{{user `my_name`}}-{{user `build_name`}}-{{user `distro_name`}}-{{user `build_timestamp`}}",
+      "labels": {
+        "build_timestamp": "{{user `build_timestamp`}}"
+      },
+      "machine_type": "{{user `machine_type`}}",
+      "name": "{{user `build_name`}}",
+      "project_id": "tkpd-stag-cloud-workshop-27c9",
+      "source_image_family": "{{user `source_image_family`}}",
+      "ssh_username": "root",
+      "network": "vpc-workshop-default",
+      "subnetwork": "subnet-a",
+      "type": "googlecompute",
+      "zone": "{{user `zone`}}"
+    }
+  ],
+  "post-processors": [],
+  "provisioners": [
+    {
+      "script": "packer/script/provisioner.sh",
+      "type": "shell"
+    },
+    {
+      "ansible_env_vars": [
+        "ANSIBLE_SSH_ARGS='{{user `existing_ansible_ssh_args`}} -o IdentitiesOnly=yes'"
+      ],
+      "extra_arguments": [
+        "--extra-vars",
+        "{{user `ansible_common_vars`}}",
+        "--extra-vars",
+        "{{user `ansible_extra_vars`}}"
+      ],
+      "playbook_file": "{{user `ansible_playbook`}}",
+      "type": "ansible"
+    }
+  ],
+  "variables": {
+    "ansible_common_vars": "",
+    "ansible_extra_vars": "",
+    "ansible_playbook": "",
+    "build_name": "{{timestamp}}",
+    "build_timestamp": "{{timestamp}}",
+    "distro_name": "ubuntu-2004",
+    "machine_type": "n1-standard-1",
+    "my_name": "",
+    "source_image_family": "{{user `distro_name`}}-lts",
+    "zone": ""
+  }
+}
